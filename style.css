@@ -3,6 +3,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.game,
+.results,
+.round-winner {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+.results {
+  flex-wrap: wrap;
+}
+
+.player-choice,
+.computer-choice,
+.player-score,
+.computer-score,
+.score-title,
+.score-value {
+  margin: 10px;
 }
 
 .button {

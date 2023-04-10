@@ -32,13 +32,25 @@ function playRound(playerSelection, computerSelection) {
   let winningSelection = determineWinner(playerSelection, computerSelection);
 
   if (!winningSelection) {
-    return `It's a draw! ${playerSelection} against ${computerSelection}`;
+    return {
+      result: "draw",
+      message: `It's a draw! ${playerSelection} against ${computerSelection}`,
+    };
   } else if (winningSelection == playerSelection) {
-    return `You Win! ${playerSelection} beats ${computerSelection}`;
+    return {
+      result: "victory",
+      message: `You Win! ${playerSelection} beats ${computerSelection}`,
+    };
   } else if (winningSelection == computerSelection) {
-    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+    return {
+      result: "defeat",
+      message: `You Lose! ${computerSelection} beats ${playerSelection}`,
+    };
   } else {
-    return "Something went catastrophically wrong";
+    return {
+      result: "error",
+      message: "Something went catastrophically wrong",
+    };
   }
 }
 
@@ -63,8 +75,29 @@ function game() {
 }
 
 const buttons = document.querySelectorAll("button");
+const winnerText = document.querySelector(".round-winner");
+const playerScore = document.querySelector(".player-score .score-value");
+const computerScore = document.querySelector(".computer-score .score-value");
+
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
-    console.log(playRound(button.id, getComputerChoice()));
+    const round = playRound(button.id, getComputerChoice());
+    winnerText.textContent = round.message;
+    if (round.result == "victory") {
+      playerScore.textContent = parseInt(playerScore.textContent) + 1;
+    } else if (round.result == "defeat") {
+      computerScore.textContent = parseInt(computerScore.textContent) + 1;
+    }
+    if (playerScore.textContent == "5") {
+      winnerText.textContent = "Game Over!\n The player won!";
+      buttons.forEach((button) => {
+        button.disabled = true;
+      });
+    } else if (computerScore.textContent == "5") {
+      winnerText.textContent = "Game Over!\n The computer won!";
+      buttons.forEach((button) => {
+        button.disabled = true;
+      });
+    }
   });
 });
