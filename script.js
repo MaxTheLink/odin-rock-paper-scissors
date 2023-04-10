@@ -1,3 +1,7 @@
+const ROUND_RESULT_VICTORY = "victory";
+const ROUND_RESULT_DEFEAT = "defat";
+const ROUND_RESULT_DRAW = "draw";
+
 function getComputerChoice() {
   const options = ["Rock", "Paper", "Scissors"];
   const randomChoice = Math.floor(Math.random() * 3);
@@ -5,99 +9,80 @@ function getComputerChoice() {
   return options[randomChoice];
 }
 
-function determineWinner(choice1, choice2) {
-  let result = null;
-
-  switch (choice1.toLowerCase() + choice2.toLowerCase()) {
+function determineWinner(playerChoice, computerChoice) {
+  switch (playerChoice.toLowerCase() + computerChoice.toLowerCase()) {
     case "rockscissors":
     case "scissorspaper":
     case "paperrock":
-      result = choice1;
-      break;
+      return ROUND_RESULT_VICTORY;
     case "scissorsrock":
     case "paperscissors":
     case "rockpaper":
-      result = choice2;
-      break;
+      return ROUND_RESULT_DEFEAT;
     case "paperpaper":
     case "scissorsscissors":
     case "rockrock":
-      result = null;
-      break;
-  }
-  return result;
-}
-
-function playRound(playerSelection, computerSelection) {
-  let winningSelection = determineWinner(playerSelection, computerSelection);
-
-  if (!winningSelection) {
-    return {
-      result: "draw",
-      message: `It's a draw! ${playerSelection} against ${computerSelection}`,
-    };
-  } else if (winningSelection == playerSelection) {
-    return {
-      result: "victory",
-      message: `You Win! ${playerSelection} beats ${computerSelection}`,
-    };
-  } else if (winningSelection == computerSelection) {
-    return {
-      result: "defeat",
-      message: `You Lose! ${computerSelection} beats ${playerSelection}`,
-    };
-  } else {
-    return {
-      result: "error",
-      message: "Something went catastrophically wrong",
-    };
+      return ROUND_RESULT_DRAW;
   }
 }
 
-function game() {
-  let playerWins = 0;
-  let computerWins = 0;
-  let rounds = 5;
-  for (let i = 0; i < rounds; i++) {
-    const playerSelection = prompt(
-      "Rock, paper or scissors, which will it be?"
-    );
-    const computerSelection = getComputerChoice();
-    const playRoundResult = playRound(playerSelection, computerSelection);
-    if (playRoundResult.includes("Win")) {
-      playerWins++;
-    } else if (playRoundResult.includes("Lose")) {
-      computerWins++;
-    }
-    console.log(playRoundResult);
+function playRound(playerSelection) {
+  const computerSelection = getComputerChoice();
+  const roundResult = determineWinner(playerSelection, computerSelection);
+
+  let resultMessage = "";
+  if (roundResult == "draw") {
+    resultMessage = `It's a draw! ${playerSelection} against ${computerSelection}`;
+  } else if (roundResult == "victory") {
+    resultMessage = `You Win! ${playerSelection} beats ${computerSelection}`;
+  } else if (roundResult == "defeat") {
+    resultMessage = `You Lose! ${computerSelection} beats ${playerSelection}`;
   }
-  console.log(`Total score: Computer: ${computerWins}, Player: ${playerWins}`);
+
+  applyRoundResult(resultMessage, roundResult);
+
+  checkForWinners();
+}
+function checkForWinners() {
+  if (playerScore == "5") {
+    winnerText.textContent = "Game Over!\n The player won!";
+    buttons.forEach((button) => {
+      button.disabled = true;
+    });
+  } else if (computerScore == "5") {
+    winnerText.textContent = "Game Over! The computer won!";
+    buttons.forEach((button) => {
+      button.disabled = true;
+    });
+  }
+}
+
+function applyRoundResult(resultMessage, roundResult) {
+  winnerText.textContent = resultMessage;
+  if (roundResult == ROUND_RESULT_DRAW) {
+    return;
+  } else if (roundResult == ROUND_RESULT_VICTORY) {
+    playerScore++;
+    playerScoreOutput.textContent = playerScore;
+  } else if (roundResult == ROUND_RESULT_DEFEAT) {
+    computerScore++;
+    computerScoreOutput.textContent = computerScore;
+  }
 }
 
 const buttons = document.querySelectorAll("button");
 const winnerText = document.querySelector(".round-winner");
-const playerScore = document.querySelector(".player-score .score-value");
-const computerScore = document.querySelector(".computer-score .score-value");
+const playerScoreOutput = document.querySelector(".player-score .score-value");
+const computerScoreOutput = document.querySelector(
+  ".computer-score .score-value"
+);
+
+let playerScore = 0;
+let computerScore = 0;
+
+playerScoreOutput.textContent = playerScore;
+computerScoreOutput.textContent = computerScore;
 
 buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const round = playRound(button.id, getComputerChoice());
-    winnerText.textContent = round.message;
-    if (round.result == "victory") {
-      playerScore.textContent = parseInt(playerScore.textContent) + 1;
-    } else if (round.result == "defeat") {
-      computerScore.textContent = parseInt(computerScore.textContent) + 1;
-    }
-    if (playerScore.textContent == "5") {
-      winnerText.textContent = "Game Over!\n The player won!";
-      buttons.forEach((button) => {
-        button.disabled = true;
-      });
-    } else if (computerScore.textContent == "5") {
-      winnerText.textContent = "Game Over!\n The computer won!";
-      buttons.forEach((button) => {
-        button.disabled = true;
-      });
-    }
-  });
+  button.addEventListener("click", playRound.bind(this, button.id));
 });
