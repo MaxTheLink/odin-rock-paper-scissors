@@ -1,3 +1,10 @@
+<!-- 
+  Todo:
+  - Add restart button
+  - Display results of the already played rounds
+  - Add styling
+  - Fix conventional commits not working 
+-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,24 +18,29 @@
   <body>
     <div class="container">
       <div class="game">
-        <div class="player-choice">Rock</div>
+        <div class="player-choice">Player</div>
         <div class="versus-text">vs.</div>
-        <div class="computer-choice">Paper</div>
+        <div class="computer-choice">Computer</div>
       </div>
       <div class="results">
         <div class="player-score">
           <div class="score-title">Player score:</div>
-          <div class="score-value"></div>
+          <div class="score-value">0</div>
         </div>
         <div class="computer-score">
           <div class="score-title">Computer score:</div>
-          <div class="score-value"></div>
+          <div class="score-value">0</div>
         </div>
-        <div class="round-winner"></div>
+        <div class="round-winner">Press a button to start the game</div>
       </div>
-      <button class="button" id="rock">Rock</button>
-      <button class="button" id="paper">Paper</button>
-      <button class="button" id="scissors">Scissors</button>
+      <div class="game-buttons">
+        <button class="button game-button" id="Rock">Rock</button>
+        <button class="button game-button" id="Paper">Paper</button>
+        <button class="button game-button" id="Scissors">Scissors</button>
+      </div>
+      <div class="restart-controls">
+        <button class="button" id="restart-button" disabled>Restart</button>
+      </div>
     </div>
   </body>
 </html>
